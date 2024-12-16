@@ -7,6 +7,9 @@ export default {
         sans: ["Roboto", "sans-serif"], // Replace 'Roboto' with your font
         // You can add more font families if needed:
       },
+      colors: {
+        customBlue: "rgb(67, 101, 163)",
+      },
     },
   },
   plugins: [],
