@@ -2,11 +2,11 @@ export interface Product {
   id: number;
   name: string;
   price: number;
-  condition: string;
+  product_condition: string;
   description: string;
   city: string;
-  image: string;
-  category: string;
-  views: number;
-  user: string;
+  image_name: string;
+  user_id: string;
+  published_date: Date;
+  db_active: Boolean;
 }

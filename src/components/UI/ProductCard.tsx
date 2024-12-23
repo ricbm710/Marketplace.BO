@@ -12,13 +12,15 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const IMAGE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
+
   return (
     <>
       <div className="p-2">
         <div className="w-full max-w-[400px] aspect-square overflow-hidden border border-gray-300 rounded-md md:max-w-[800px]">
           <Link to={`product/${product.id}`}>
             <img
-              src={`/dummy/${product.image}`}
+              src={`${IMAGE_URL}/products/${product.image_name}`}
               className="w-full h-full object-cover object-center"
               alt="Product"
             />
