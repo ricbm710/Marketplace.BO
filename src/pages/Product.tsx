@@ -48,7 +48,7 @@ const Product = () => {
   return (
     <>
       <div className="p-2 flex flex-col md:flex-row md:p-4">
-        <div className="w-full md:w-1/2 max-w-[800px] md:max-w-[800px] aspect-square overflow-hidden border border-gray-300 rounded-md ">
+        <div className="w-full md:w-1/3 max-w-[800px] md:max-w-[800px] aspect-square overflow-hidden border border-gray-300 rounded-md ">
           <img
             src={`${IMAGE_URL}/products/${product?.image_name}`}
             className="w-full h-full object-cover object-center"

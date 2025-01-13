@@ -6,11 +6,15 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 //Tailwind Setup
 import "./index.css";
+//context
+import { UserProvider } from "./context/userContext";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || ""}>
-      <App />
-    </BrowserRouter>
+    <UserProvider>
+      <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || ""}>
+        <App />
+      </BrowserRouter>
+    </UserProvider>
   </React.StrictMode>
 );
