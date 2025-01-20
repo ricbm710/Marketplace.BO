@@ -1,41 +1,40 @@
-//hooks
 import { useState } from "react";
 //types
-import { LoginFormDataType } from "../../types/loginForm.types";
+import { RegisterFormDataType } from "../../types/registerForm.types";
 //utils
+import { register } from "../../utils/register";
 import { login } from "../../utils/login";
 import { fetchUserDetails } from "../../utils/fetchUserDetails";
-//rrd
-import { Link, useNavigate } from "react-router-dom";
-//context
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/userContext";
 
-const LoginForm = () => {
-  //form data state
-  const [formData, setFormData] = useState<LoginFormDataType>({
+const RegisterForm = () => {
+  const [formData, setFormData] = useState<RegisterFormDataType>({
     email: "",
+    name: "",
+    phone: "",
     password: "",
   });
-  //login error state
-  const [error, setError] = useState<String | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
   //navigation
   const navigate = useNavigate();
   //user context
   const { loginContext, setExpired } = useUser();
 
-  //handle change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-  //on submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //login logic
     try {
-      //login returns the jwt string
-      const token = await login(formData);
+      await register(formData);
+      //login logic
+      const token = await login({
+        email: formData.email,
+        password: formData.password,
+      });
       if (token) {
         localStorage.setItem("authToken", JSON.stringify(token));
 
@@ -49,13 +48,12 @@ const LoginForm = () => {
           throw new Error("Couldn't get the data from the user");
         }
 
-        navigate(-1);
+        navigate("/");
       } else {
         throw new Error("Invalid Token Received!");
       }
     } catch (error) {
       console.error(error);
-      setError("Login failed.");
     }
   };
 
@@ -63,7 +61,7 @@ const LoginForm = () => {
     <div className="p-2 m-2">
       <form className="p-2 flex flex-col items-center" onSubmit={handleSubmit}>
         <h2 className="font-semibold text-center custom-txt-lg md:mb-2">
-          Inicio de Sesion
+          Registro de Usuario
         </h2>
         <div className="flex flex-col custom-txt-sm">
           <label htmlFor="email">Email</label>
@@ -71,6 +69,28 @@ const LoginForm = () => {
             type="email"
             name="email"
             id="email"
+            required
+            className="p-1 block w-full border border-gray-500 rounded"
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex flex-col custom-txt-sm">
+          <label htmlFor="name">Nombre</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            required
+            className="p-1 block w-full border border-gray-500 rounded"
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex flex-col custom-txt-sm">
+          <label htmlFor="phone">Telefono</label>
+          <input
+            type="text"
+            name="phone"
+            id="phone"
             required
             className="p-1 block w-full border border-gray-500 rounded"
             onChange={handleChange}
@@ -91,22 +111,11 @@ const LoginForm = () => {
           type="submit"
           className="mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600"
         >
-          Iniciar Sesion
+          Registrar
         </button>
-        {error && (
-          <p className="mt-2 text-red-700 text-sm">
-            No se pudo iniciar sesión.
-          </p>
-        )}
       </form>
-      <p className="text-center custom-txt-xs">
-        No tenés una cuenta? Registrate{" "}
-        <Link to="/register" className="text-blue-500 underline">
-          aquí
-        </Link>
-      </p>
     </div>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

@@ -5,7 +5,7 @@ export const getTokenString = (): string | null => {
   const authTokenString = localStorage.getItem("authToken");
 
   if (!authTokenString) {
-    console.warn("No auth token found in localStorage.");
+    //console.warn("No auth token found in localStorage.");
     return null;
   }
 

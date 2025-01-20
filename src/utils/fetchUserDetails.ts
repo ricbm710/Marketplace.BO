@@ -4,16 +4,17 @@ import axios from "axios";
 import { userDatatype } from "../types/user.types";
 //utils
 import { getTokenString } from "./getTokenString";
+//config
+import { API_URL } from "../config";
 
-//*this function helps set the User Context once the login is successful by returning the user details
+//*this function helps set the User Context (once the login is successful) by returning the user details
+//*It can detect if an user is logged in at the start of the app
 
-export const fetchUserDetails = async (): Promise<userDatatype | null> => {
-  const API_URL = import.meta.env.VITE_API_URL;
-  //get token string
+export const fetchUserDetails = async (
+  setExpired: React.Dispatch<React.SetStateAction<boolean>>
+): Promise<userDatatype | null> => {
   const tokenString = getTokenString();
-
   if (!tokenString) {
-    console.warn("Token is missing or invalid. Aborting fetch.");
     return null; // Skip fetching if token is not valid
   }
 
@@ -24,8 +25,11 @@ export const fetchUserDetails = async (): Promise<userDatatype | null> => {
       },
     });
     return response.data;
-  } catch (error) {
-    console.error("Failed to set user context:", error);
+  } catch (error: any) {
+    const errorResponse = JSON.parse(error.request.response);
+    if (errorResponse.error === "Token has expired") {
+      setExpired(true); // Update expired state in the context
+    }
     return null;
   }
 };

@@ -12,5 +12,22 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addComponents }) {
+      addComponents({
+        ".custom-txt-xs": {
+          "@apply text-xs sm:text-sm md:text-base": {},
+        },
+        ".custom-txt-sm": {
+          "@apply sm:text-base md:text-lg": {},
+        },
+        ".custom-txt-md": {
+          "@apply sm:text-lg md:text-xl": {},
+        },
+        ".custom-txt-lg": {
+          "@apply sm:text-xl md:text-2xl": {},
+        },
+      });
+    },
+  ],
 };

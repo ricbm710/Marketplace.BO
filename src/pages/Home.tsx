@@ -8,13 +8,14 @@ import ProductCard from "../components/UI/ProductCard";
 import { Product } from "../types/product.types";
 //axios
 import axios from "axios";
+//config
+import { API_URL } from "../config";
 
 const Home = () => {
+  //*loads all products
   const [products, setProducts] = useState<Product[] | null>(null);
   const [loading, setLoading] = useState<Boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,8 +23,14 @@ const Home = () => {
         const response = await axios.get<Product[]>(API_URL + "/products");
         setProducts(response.data);
         setLoading(false);
-      } catch (error) {
-        setError("Failed to fetch products");
+      } catch (error: any) {
+        if (error.message === "Network Error") {
+          setError("No se pudo conectar con la base de datos.");
+        } else {
+          const errorData = JSON.stringify(error.response.data.error);
+          setError(errorData.replace(/"/g, ""));
+        }
+      } finally {
         setLoading(false);
       }
     };
@@ -32,11 +39,19 @@ const Home = () => {
 
   //rendering
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="p-1 md:p-2 custom-txt-sm">
+        <p>Cargando Productos...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <div className="p-1 md:p-2 custom-txt-sm">
+        <p>{error}</p>
+      </div>
+    );
   }
 
   return (

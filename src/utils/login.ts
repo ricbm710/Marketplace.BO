@@ -2,9 +2,10 @@
 import axios from "axios";
 //types
 import { LoginFormDataType } from "../types/loginForm.types";
+//config
+import { API_URL } from "../config";
 
 export const login = async (formData: LoginFormDataType) => {
-  const API_URL = import.meta.env.VITE_API_URL;
   const { email, password } = formData;
   try {
     const response = await axios.post(
