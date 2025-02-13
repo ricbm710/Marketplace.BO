@@ -42,7 +42,7 @@ const Navbar = () => {
                 <Link to="/new" className="text-white mx-1 border p-1">
                   Publicar Articulo
                 </Link>
-                <Link to="/" className="text-white mx-1 border p-1">
+                <Link to="/my-products" className="text-white mx-1 border p-1">
                   Mis Articulos
                 </Link>
               </div>

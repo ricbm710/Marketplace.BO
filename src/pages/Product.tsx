@@ -6,10 +6,13 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 //types
 import { Product as ProductType } from "../types/product.types";
+import { userDatatype } from "../types/user.types";
 //axios
 import axios from "axios";
 //config
-import { API_URL, IMAGE_URL } from "../config";
+import { API_URL, IMAGE_STORAGE, IMAGE_URL } from "../config";
+//utils
+import { fetchUserById } from "../utils/fetchUserById";
 
 const Product = () => {
   const { id } = useParams();
@@ -17,6 +20,8 @@ const Product = () => {
   const [product, setProduct] = useState<ProductType | null>(null);
   const [loading, setLoading] = useState<Boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [seller, setSeller] = useState<userDatatype | null>(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -40,6 +45,20 @@ const Product = () => {
     fetchProduct();
   }, [id]);
 
+  useEffect(() => {
+    const fetchSeller = async () => {
+      if (product?.id) {
+        const result = await fetchUserById(product.user_id.toString());
+        setSeller(result);
+      }
+    };
+
+    // Only fetch the seller once the product has been fetched
+    if (product?.id) {
+      fetchSeller();
+    }
+  }, [product]); // This effect will run whenever `product` is updated
+
   //rendering
   if (loading) {
     return <div className="p-1 md:p-2 custom-txt-sm">Cargando producto...</div>;
@@ -54,7 +73,11 @@ const Product = () => {
       <div className="p-2 flex flex-col md:flex-row md:p-4">
         <div className="w-full md:w-1/3 max-w-[800px] md:max-w-[800px] aspect-square overflow-hidden border border-gray-300 rounded-md ">
           <img
-            src={`${IMAGE_URL}/products/${product?.image_name}`}
+            src={
+              IMAGE_STORAGE === "local"
+                ? `${IMAGE_URL}/products/${product?.image_name}`
+                : product?.image_name
+            }
             className="w-full h-full object-cover object-center"
             alt="Product"
           />
@@ -77,11 +100,11 @@ const Product = () => {
             <span className="font-semibold">Ciudad:</span> {product?.city}
           </p>
           <p className="text-center custom-txt-sm text-gray-500 md:p-1">
-            <span className="font-semibold">Vendedor:</span> {product?.user_id}
+            <span className="font-semibold">Vendedor:</span> {seller?.name}
           </p>
           <div className="flex justify-center">
             <Link
-              to={`https://wa.me/75577695?text=Me interesa el item ${product?.name} de Marketplace.BO`}
+              to={`https://wa.me/${seller?.phone}?text=Me interesa el item ${product?.name} de Marketplace.BO`}
               className="custom-txt-md my-2 p-2 md:p-3 border border-white rounded-md bg-amber-800 text-white hover:bg-amber-950 transition-all"
             >
               Contactar Vendedor

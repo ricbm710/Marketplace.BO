@@ -7,7 +7,7 @@ import { faLocationCrosshairs } from "@fortawesome/free-solid-svg-icons/faLocati
 //rrd
 import { Link } from "react-router-dom";
 //config
-import { IMAGE_URL } from "../../config";
+import { IMAGE_STORAGE, IMAGE_URL } from "../../config";
 
 type ProductCardProps = {
   product: Product;
@@ -20,7 +20,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="w-full max-w-[400px] aspect-square overflow-hidden border border-gray-300 rounded-md md:max-w-[800px]">
           <Link to={`product/${product.id}`}>
             <img
-              src={`${IMAGE_URL}/products/${product.image_name}`}
+              src={
+                IMAGE_STORAGE === "local"
+                  ? `${IMAGE_URL}/products/${product.image_name}`
+                  : product.image_name
+              }
               className="w-full h-full object-cover object-center"
               alt="Product"
             />
