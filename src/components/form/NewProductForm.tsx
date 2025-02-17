@@ -236,7 +236,7 @@ const NewProductForm = () => {
               type="submit"
               className="mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600 max-w-[200px]"
             >
-              Publicar
+              {isSubmitting ? "Publicando..." : "Publicar"}
             </button>
             {error && (
               <p
