@@ -241,6 +241,7 @@ const NewProductForm = () => {
             {error && (
               <p
                 className={`mt-2 text-red-700 custom-txt-xs disabled:${isSubmitting}`}
+                onClick={(e) => isSubmitting && e.preventDefault()}
               >
                 {error}
               </p>
