@@ -24,6 +24,9 @@ const LoginForm = () => {
   //user context
   const { loginContext, setExpired } = useUser();
 
+  //submit state
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   //handle change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,6 +35,9 @@ const LoginForm = () => {
   //on submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setIsSubmitting(true);
+
     //login logic
     try {
       //login returns the jwt string
@@ -56,6 +62,8 @@ const LoginForm = () => {
     } catch (error) {
       console.error(error);
       setError("Login failed.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -94,7 +102,7 @@ const LoginForm = () => {
           Iniciar Sesion
         </button>
         {error && (
-          <p className="mt-2 text-red-700 text-sm">
+          <p className={`mt-2 text-red-700 text-sm disabled:${isSubmitting}`}>
             No se pudo iniciar sesión.
           </p>
         )}

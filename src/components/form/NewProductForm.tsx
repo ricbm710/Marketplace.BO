@@ -34,6 +34,9 @@ const NewProductForm = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  //submit state
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -45,6 +48,9 @@ const NewProductForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    //set submit state TRUE
+    setIsSubmitting(true);
 
     //Validate fields
     const errors: newProductValidation = {
@@ -109,6 +115,8 @@ const NewProductForm = () => {
         navigate(`/product/${newProductId}`);
       } catch (error) {
         setError("No se pudo crear el producto.");
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -231,7 +239,11 @@ const NewProductForm = () => {
               Publicar
             </button>
             {error && (
-              <p className="mt-2 text-red-700 custom-txt-xs">{error}</p>
+              <p
+                className={`mt-2 text-red-700 custom-txt-xs disabled:${isSubmitting}`}
+              >
+                {error}
+              </p>
             )}
           </div>
         </div>

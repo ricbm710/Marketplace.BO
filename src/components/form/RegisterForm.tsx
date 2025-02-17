@@ -26,8 +26,14 @@ const RegisterForm = () => {
   //user context
   const { loginContext, setExpired } = useUser();
 
+  //submit state
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setIsSubmitting(true);
+
     try {
       await register(formData);
       //login logic
@@ -54,6 +60,8 @@ const RegisterForm = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -109,7 +117,7 @@ const RegisterForm = () => {
         </div>
         <button
           type="submit"
-          className="mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600"
+          className={`mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600 disabled:${isSubmitting}`}
         >
           Registrar
         </button>

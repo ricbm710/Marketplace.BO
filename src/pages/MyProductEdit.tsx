@@ -53,6 +53,9 @@ const MyProductEdit = () => {
     imageFile: "",
   });
 
+  //submit state
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   useEffect(() => {
     if (!id) return;
     // get product data on component mount
@@ -106,6 +109,8 @@ const MyProductEdit = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setIsSubmitting(true);
 
     // Update the editedData since the Image update doesn't happen immediately. It happens in a child component
     seteditedFormData((prevData) => {
@@ -166,6 +171,8 @@ const MyProductEdit = () => {
         } catch (error) {
           console.log(error);
           setError("No se pudo editar el producto.");
+        } finally {
+          setIsSubmitting(false);
         }
       }
     }
@@ -301,7 +308,11 @@ const MyProductEdit = () => {
                 Confirmar Cambios
               </button>
               {error && (
-                <p className="mt-2 text-red-700 custom-txt-xs">{error}</p>
+                <p
+                  className={`mt-2 text-red-700 custom-txt-xs disabled:${isSubmitting}`}
+                >
+                  {error}
+                </p>
               )}
             </div>
           </div>
