@@ -14,9 +14,7 @@ export const updateProduct = async (
   const { name, price, condition, description, city, imageFile } = formData;
 
   const tokenString = getTokenString();
-  if (!tokenString) {
-    return null; // Skip fetching if token is not valid
-  }
+  if (!tokenString) return null;
 
   try {
     const response = await axios.put(
@@ -32,10 +30,11 @@ export const updateProduct = async (
       {
         headers: {
           Authorization: `Bearer ${tokenString}`,
-          "Content-Type": "multipart/form-data", // Specify the content type (because of Image File)
+          "Content-Type": "multipart/form-data", // Let Axios set boundaries automatically
         },
       }
     );
+
     if (response.status === 201) {
       return;
     }

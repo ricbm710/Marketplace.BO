@@ -7,9 +7,9 @@ import { newProductDataType } from "../types/newProductForm.types";
 import { newProductValidation } from "../types/newProductValidation";
 import { mapProductToNewProduct } from "../utils/mapProductToNewProduct";
 import { fetchImageFile } from "../utils/fetchImageFile";
-import { validateInputNewProduct } from "../utils/validateInputNewProduct";
 import { areObjectsEqual } from "../utils/areObjectsEqual";
 import { updateProduct } from "../utils/updateProduct";
+import { validateFormDataProduct } from "../utils/validateFormDataProduct";
 //types
 import { Product } from "../types/product.types";
 //components
@@ -127,34 +127,7 @@ const MyProductEdit = () => {
     if (!readyToSubmit) return;
 
     // Validate fields
-    const errors: newProductValidation = {
-      name: "",
-      price: "",
-      condition: "",
-      description: "",
-      city: "",
-      imageFile: "",
-    };
-    let hasError = false;
-
-    Object.entries(editedFormData).forEach(([name, value]) => {
-      if (name === "imageFile") {
-        if (value === null) {
-          errors[name as keyof newProductValidation] =
-            "No se ha seleccionado una imagen.";
-          hasError = true;
-        }
-      } else {
-        const formattedValue =
-          typeof value === "number" ? value.toString() : value;
-        const dataError = validateInputNewProduct(name, formattedValue);
-        if (name in errors) {
-          errors[name as keyof newProductValidation] = dataError;
-        }
-        if (dataError) hasError = true;
-      }
-    });
-
+    const { errors, hasError } = validateFormDataProduct(editedFormData);
     setFormDataErrors(errors);
 
     // Compare data and proceed with update
@@ -174,6 +147,8 @@ const MyProductEdit = () => {
         } finally {
           setIsSubmitting(false);
         }
+      } else {
+        setIsSubmitting(false);
       }
     }
 
@@ -303,16 +278,13 @@ const MyProductEdit = () => {
             <div className="flex justify-center flex-col items-center">
               <button
                 type="submit"
-                className="mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600 max-w-[200px]"
+                disabled={isSubmitting}
+                className={`mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600 max-w-[200px]`}
               >
-                Confirmar Cambios
+                {isSubmitting ? "Confirmando..." : "Confirmar"}
               </button>
               {error && (
-                <p
-                  className={`mt-2 text-red-700 custom-txt-xs disabled:${isSubmitting}`}
-                >
-                  {error}
-                </p>
+                <p className={`mt-2 text-red-700 custom-txt-xs`}>{error}</p>
               )}
             </div>
           </div>

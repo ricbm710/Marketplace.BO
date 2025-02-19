@@ -117,7 +117,8 @@ const RegisterForm = () => {
         </div>
         <button
           type="submit"
-          className={`mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600 disabled:${isSubmitting}`}
+          disabled={isSubmitting}
+          className={`mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600`}
         >
           Registrar
         </button>

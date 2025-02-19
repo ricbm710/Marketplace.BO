@@ -10,7 +10,7 @@ import axios from "axios";
 import { API_URL } from "../../config";
 //utils
 import { getTokenString } from "../../utils/getTokenString";
-import { validateInputNewProduct } from "../../utils/validateInputNewProduct";
+import { validateFormDataProduct } from "../../utils/validateFormDataProduct";
 //rrd
 import { useNavigate } from "react-router-dom";
 
@@ -53,40 +53,13 @@ const NewProductForm = () => {
     setIsSubmitting(true);
 
     //Validate fields
-    const errors: newProductValidation = {
-      name: "",
-      price: "",
-      condition: "",
-      description: "",
-      city: "",
-      imageFile: "",
-    };
-    let hasError = false;
-
-    Object.entries(formData).forEach(([name, value]) => {
-      //treat imageFile
-      if (name === "imageFile") {
-        if (value === null) {
-          errors[name as keyof newProductValidation] =
-            "No se ha seleccionado una imagen.";
-          hasError = true; // Set hasError to true if there's an error
-        }
-      } else {
-        const formattedValue =
-          typeof value === "number" ? value.toString() : value;
-        const dataError = validateInputNewProduct(name, formattedValue);
-        if (name in errors) {
-          errors[name as keyof newProductValidation] = dataError; // Assign the error
-        }
-
-        if (dataError) hasError = true;
-      }
-    });
+    const { errors, hasError } = validateFormDataProduct(formData);
     setFormDataErrors(errors);
 
     //grab token
     const tokenString = getTokenString();
     if (!tokenString) {
+      setIsSubmitting(false);
       return null;
     }
     if (!hasError) {
@@ -118,6 +91,9 @@ const NewProductForm = () => {
       } finally {
         setIsSubmitting(false);
       }
+    } else {
+      setIsSubmitting(false);
+      return null;
     }
   };
 
@@ -234,17 +210,15 @@ const NewProductForm = () => {
           <div className="flex justify-center flex-col items-center">
             <button
               type="submit"
-              className="mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600 max-w-[200px]"
+              disabled={isSubmitting}
+              className={`mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600 max-w-[200px] ${
+                isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               {isSubmitting ? "Publicando..." : "Publicar"}
             </button>
             {error && (
-              <p
-                className={`mt-2 text-red-700 custom-txt-xs disabled:${isSubmitting}`}
-                onClick={(e) => isSubmitting && e.preventDefault()}
-              >
-                {error}
-              </p>
+              <p className={`mt-2 text-red-700 custom-txt-xs`}>{error}</p>
             )}
           </div>
         </div>

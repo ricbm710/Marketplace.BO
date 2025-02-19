@@ -97,12 +97,13 @@ const LoginForm = () => {
         </div>
         <button
           type="submit"
+          disabled={isSubmitting}
           className="mt-3 p-2 custom-txt-sm text-white border border-gray-500 bg-amber-700 rounded hover:bg-amber-600"
         >
           Iniciar Sesion
         </button>
         {error && (
-          <p className={`mt-2 text-red-700 text-sm disabled:${isSubmitting}`}>
+          <p className={`mt-2 text-red-700 text-sm`}>
             No se pudo iniciar sesión.
           </p>
         )}

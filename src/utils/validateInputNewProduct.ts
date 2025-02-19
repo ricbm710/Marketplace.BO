@@ -8,8 +8,8 @@ export const validateInputNewProduct = (
 
   switch (name) {
     case "name":
-      if (value.length < 10)
-        return "El nombre del producto no puede tener menos de 10 caracteres.";
+      if (value.length < 5)
+        return "El nombre del producto no puede tener menos de 5 caracteres.";
       break;
     case "price":
       if (isNaN(Number(value))) return "El precio debe ser un número válido.";
@@ -19,8 +19,8 @@ export const validateInputNewProduct = (
     case "condition":
       break; // You can add custom validation if needed.
     case "description":
-      if (value.length < 30)
-        return "La descripción del producto no puede tener menos de 30 caracteres.";
+      if (value.length > 255)
+        return "La descripción del producto no puede tener mas de 255 caracteres.";
       break;
     case "city":
       break; // You can add custom validation if needed.
